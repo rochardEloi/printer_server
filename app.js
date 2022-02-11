@@ -11,15 +11,15 @@ const commandsRoute = require("./routes/commands");
 const bodyParser = require('body-parser')
 
 
- 
-mongoose.connect('mongodb://127.0.0.1:27017/', {
+mongoose.connect('mongodb+srv://rochard_database:6BE51mKjeL2OCEyO@cluster0.0v5yb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         dbName:"online_printer"
     })
     .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'));
- 
+
+
 app.use(bodyParser.json())
 app.use((req, res, next) => { 
     res.setHeader('Access-Control-Allow-Origin', '*');
