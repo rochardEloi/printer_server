@@ -3,7 +3,7 @@ const Parameters = require("../models/parameters");
 const Books = require("../models/books")
 const Transaction = require("../models/transaction")
 const dotenv = require("dotenv");
-const { toInteger } = require("lodash");
+
 dotenv.config()
 const stripe = require('stripe')(process.env.STRIPE_TOKEN);
 // This example sets up an endpoint using the Express framework.
