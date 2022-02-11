@@ -1,0 +1,6 @@
+connection.query('SELECT * from machin', function (error, results, fields) {
+  if (error) throw error;
+  console.log(results);
+  //res.send(results);
+  nom = results;
+})
