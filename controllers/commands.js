@@ -72,14 +72,14 @@ exports.executeCommand =  async (req, res) => {
                 status : "Commande Effectuer"
             })
             command.save().then(()=>{
-                res.status("200").json({message : "Succes"})
+                res.status("201").json({message : "Succes"})
             }).catch((err)=>{
-                res.status("400").json({message : "Saving Commmand error", error: err})
+                res.status("401").json({message : "Saving Commmand error", error: err})
             })
         }else
-         res.status("400").json({message : "Transaction fail"})
+         res.status("401").json({message : "Transaction fail"})
     }).catch(()=>{
-        res.status("400").json({message : "Saving Transaction Error"})
+        res.status("401").json({message : "Saving Transaction Error"})
     })
 
     //res.send(session);
@@ -88,33 +88,34 @@ exports.executeCommand =  async (req, res) => {
 
 exports.getCommands = (req, res)=>{ 
    Commands.find()
-    .then(commands => res.status("200").json(commands))
+    .then(commands => res.status("201").json(commands))
     .catch(err => res.status("401").json(err))
 }
 
 exports.getSomeCommands = (req, res)=>{ 
     Commands.find({user_id:req.params.id})
-     .then(commands => res.status("200").json(commands))
+     .then(commands => res.status("201").json(commands))
      .catch(err => res.status("401").json(err))
  }
  
+ exports.getOneCommand = (req, res)=>{
+    Commands.findOne({_id : req.params.id})
+      .then(command => res.status("200").json(command))
+      .catch(err => res.status("401").json(err))
+  }
 
 exports.getTransactions = (req, res)=>{ 
     Transaction.find()
-     .then(tr => res.status("200").json(tr))
+     .then(tr => res.status("201").json(tr))
      .catch(err => res.status("401").json(err))
  }
 
-exports.getOneCommand = (req, res)=>{
-  Commands.findOne({_id : req.params.id})
-    .then(command => res.status("200").json(command))
-    .catch(err => res.status("401").json(err))
-}
+1
 
 exports.updateCommand = (req, res)=>{
     Commands.updateOne({_id : req.params.id}, {status:req.body.status})
        .then(()=>{
-           res.status("200").json({message : "Succes"})
+           res.status("201").json({message : "Succes"})
        })
        .catch((err)=>{
            res.status("401").json(err)

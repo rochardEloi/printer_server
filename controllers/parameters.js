@@ -11,7 +11,7 @@ exports.addParameters = (req, res)=>{
 
       parameters.save()
         .then((parameters)=>{
-            res.status("200").json(parameters)
+            res.status("201").json(parameters)
         })
         .catch((err)=>{
              res.status("401").json(err)
@@ -22,7 +22,7 @@ exports.addParameters = (req, res)=>{
 exports.updateParameter = (req, res)=>{
      Parameters.updateOne({_id : req.params.id}, {...req.body, _id:req.params.id })
         .then(()=>{
-            res.status("200").json({message : "Succes"})
+            res.status("201").json({message : "Succes"})
         })
         .catch((err)=>{
             res.status("401").json(err)
@@ -32,7 +32,7 @@ exports.updateParameter = (req, res)=>{
 exports.getparameter = (req, res)=>{
    
         Parameters.find()
-        .then(parameters => res.status("200").json(parameters))
+        .then(parameters => res.status("201").json(parameters))
         .catch(err => res.status("401").json(err))
 
 
@@ -42,7 +42,7 @@ exports.getoneparameter = (req, res)=>{
    
 
     Parameters.findOne({_id : req.params.id})
-    .then(parameters => res.status("200").json(parameters))
+    .then(parameters => res.status("201").json(parameters))
     .catch(err => res.status("401").json(err))
 
 }

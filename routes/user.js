@@ -6,7 +6,7 @@ const verify = require('../middleware/auth');
 router.post('/login', userControl.login);
 router.post('/signupCustomer',  userControl.signupCustomer);
 router.post('/signupAdmin',  userControl.signupAdmin);
-router.put('/updateUser/:id',  userControl.updateUser);
+router.put('/updateUser/:id', verify("Admin"), userControl.updateUser);
 router.get("/oneUser/:id", verify("both"),userControl.getOneUser);
 router.get("/allUser", verify("Admin"), userControl.getUsers);
 

@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Balance = require("../models/balances");
 const dotenv = require("dotenv")
 dotenv.config()
 
@@ -21,7 +20,7 @@ exports.signupCustomer = (req, res, next) => {
                 user.save() 
                     .then((user) =>{
                         console.log(user)
-                        res.status(200).json({
+                        res.status(201).json({
                             userId: user._id,
                             role:user.role,
                             token: jwt.sign({ userId: user._id, role:"Customer" },
@@ -29,9 +28,9 @@ exports.signupCustomer = (req, res, next) => {
                             )
                         })
                         
-                }).catch(error => res.status('400').json({error_1 : error}))
+                }).catch(error => res.status('401').json({error_1 : error}))
             }
-        ).catch(error => res.status('500').json({error_2 : error}))
+        ).catch(error => res.status('401').json({error_2 : error}))
 };
 
 exports.signupAdmin = (req, res, next) => {   
@@ -48,7 +47,7 @@ exports.signupAdmin = (req, res, next) => {
                 });
                 user.save() 
                     .then((user) =>{
-                        res.status(200).json({
+                        res.status(201).json({
                             userId: user._id,
                             role:user.role,
                             token: jwt.sign({ userId: user._id, role:"Admin" },
@@ -56,9 +55,9 @@ exports.signupAdmin = (req, res, next) => {
                             )
                         })
                         
-                }).catch(error => res.status('400').json({error_1 : error}))
+                }).catch(error => res.status('401').json({error_1 : error}))
             }
-        ).catch(error => res.status('500').json({error_2 : error}))
+        ).catch(error => res.status('401').json({error_2 : error}))
 };
 
 
@@ -69,12 +68,15 @@ exports.login = (req, res, next) => {
         .then(
             result => {
                 if (!result) {
-                    return res.status('400').json({ 'message': 'User not found' });
+                    return res.status('401').json({ 'message': 'User not found' });
                 }
-                bcrypt.compare(req.body.password, result.password)
+                else if(result.status !== "active"){
+                    return res.status('401').json({ 'message': 'User Blocked' });
+                } else{
+                    bcrypt.compare(req.body.password, result.password)
                     .then(valid => {
                         if (!valid) {
-                            return res.status('400').json({ 'message': 'Incorrect Password' });
+                            return res.status('401').json({ 'message': 'Incorrect Password' });
                         }
                         res.status(200).json({
                             userId: result._id,
@@ -85,9 +87,11 @@ exports.login = (req, res, next) => {
                         })
                     })
                     .catch(error => res.status('401').json(error));
+                }
+                
             }
         )
-        .catch(error => res.status('501').json(error));
+        .catch(error => res.status('401').json(error));
 };
 
 exports.getUsers = (req, res)=>{ 

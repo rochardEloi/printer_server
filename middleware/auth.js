@@ -10,7 +10,7 @@ module.exports = (userType) =>{
                 const token = req.headers.authorization.split(' ')[1];
                 const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
                 const userId = decodedToken.userId;
-                User.findOne({_id : req.query.user}).then((user)=>{
+                User.findOne({_id : userId}).then((user)=>{
                     if(!user)
                         res.status("401").json({message : "Cannot find user"})
                     else if(user.status !== "active"){
