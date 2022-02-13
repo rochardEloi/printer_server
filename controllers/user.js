@@ -15,13 +15,16 @@ exports.signupCustomer = (req, res, next) => {
                     ...req.body,
                     password: hash,
                     role:"Customer",
+                    phone:"",
                     status:"active"
                 });
                 user.save() 
                     .then((user) =>{
+                        console.log(user)
                         res.status(200).json({
                             userId: user._id,
-                            token: jwt.sign({ usedId: user._id, role:"Customer" },
+                            role:user.role,
+                            token: jwt.sign({ userId: user._id, role:"Customer" },
                                 process.env.SECRET_KEY, { expiresIn: "24h" }
                             )
                         })
@@ -47,7 +50,8 @@ exports.signupAdmin = (req, res, next) => {
                     .then((user) =>{
                         res.status(200).json({
                             userId: user._id,
-                            token: jwt.sign({ usedId: user._id, role:"Admin" },
+                            role:user.role,
+                            token: jwt.sign({ userId: user._id, role:"Admin" },
                                 process.env.SECRET_KEY, { expiresIn: "24h" }
                             )
                         })
@@ -60,6 +64,7 @@ exports.signupAdmin = (req, res, next) => {
 
 
 exports.login = (req, res, next) => {
+    console.log(req.body)
     User.findOne({ email: req.body.email })
         .then(
             result => {
@@ -73,13 +78,31 @@ exports.login = (req, res, next) => {
                         }
                         res.status(200).json({
                             userId: result._id,
-                            token: jwt.sign({ usedId: result._id, role:result.role },
+                            role:result.role,
+                            token: jwt.sign({ userId: result._id, role:result.role },
                                 process.env.SECRET_KEY, { expiresIn: "24h" }
                             )
                         })
                     })
-                    .catch(error => res.status('500').json(error));
+                    .catch(error => res.status('401').json(error));
             }
         )
-        .catch(error => res.status('500').json(error));
+        .catch(error => res.status('501').json(error));
 };
+
+exports.getUsers = (req, res)=>{ 
+   User.find()
+     .then(users => res.status("201").json(users))
+     .catch(err => res.status("401").json(err))
+ }
+ exports.getOneUser = (req, res)=>{
+  User.findOne({_id : req.params.id})
+     .then(user=> res.status("201").json(user ))
+     .catch(err => res.status("401").json(err))
+ }
+
+ exports.updateUser = (req,res)=>{
+    User.updateOne({ _id: req.params.id }, {...req.body, _id: req.params.id })
+        .then(() => res.status('201').json({ message: "Succesfully updated" }))
+        .catch(error => res.status('401').json(error))
+}

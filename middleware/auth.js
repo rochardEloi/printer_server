@@ -1,25 +1,36 @@
 const jwt = require('jsonwebtoken');
-const dotenv = require("dotenv")
+const User = require('../models/user');
+const dotenv = require("dotenv");
+const user = require('../models/user');
 dotenv.config()
 
 module.exports = (userType) =>{
     return(
         (req, res, next) => {
-            try {
                 const token = req.headers.authorization.split(' ')[1];
                 const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
                 const userId = decodedToken.userId;
-                const role = decodedToken.role
-                console.log(userId);
-                console.log(decodedToken);
-                if (userType != "both" && role != userType) {
-                    res.status(401).json({ error: "Invalid User" });
-                } else {
-                    next();
-                }
-            } catch (error) {
-                res.status(401).json({ error:  "Connexion Impossible" });
-            }
+                User.findOne({_id : req.query.user}).then((user)=>{
+                    if(!user)
+                        res.status("401").json({message : "Cannot find user"})
+                    else if(user.status !== "active"){
+                        res.status("401").json({message : "account blocked"})
+                    }
+                    else{
+                        const role = decodedToken.role
+                        console.log(userId);
+                        console.log(decodedToken);
+                        if (userType != "both" && role != userType) {
+                            res.status(401).json({ message: "Invalid User" });
+                        } else {
+                            next();
+                        }
+                    }
+                    
+                }).catch(()=>{
+                    res.status(401).json({ message:  "Cannot find user informations" });
+                })
+                
         }
     )
 }

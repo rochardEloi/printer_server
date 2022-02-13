@@ -691,6 +691,11 @@ graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
   integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
 
+gridfile@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/gridfile/-/gridfile-1.1.2.tgz#030ceeda159e98c3917b6e5235bad1c4e85cf217"
+  integrity sha512-7rs0UsnoqHf91FHtwK0sJ7ngw2oS3BYqz7msLJufEhK0BssnIYqujihH3aURzWZpNSd2eIhdwKVQnItwFYS/7g==
+
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"

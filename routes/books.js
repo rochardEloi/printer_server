@@ -10,4 +10,5 @@ router.put("/update",verify("Admin"), bookControl.updateBook);
 router.get("/all", verify("Admin"), bookControl.getAllBooks);
 router.get("/some/:id", verify("both"),bookControl.getSomeBooks);
 router.get("/one/:id",verify("both"), bookControl.getOneBooks);
+router.get("/download", bookControl.downloadBook);
 module.exports = router

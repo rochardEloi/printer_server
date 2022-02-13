@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bookSchema = mongoose.Schema({
     filename :{type : String, required : true},
+    fs_id :{type : String, required : true},
 	user_id:{type : String, required : true},
 	status:{type : String, required : true},
     path_:{type : String, required : true},
