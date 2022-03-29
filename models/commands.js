@@ -13,6 +13,7 @@ const commandSchema = mongoose.Schema({
         number :{type:Number},
         zip_code:{type:String},
     },
+    command_date : {type:Date, default : Date.now},
     status :{type : String, required : true},
 });
 module.exports = mongoose.model('commands', commandSchema); 
