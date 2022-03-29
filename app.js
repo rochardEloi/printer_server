@@ -7,6 +7,7 @@ const userRoute = require("./routes/user")
 const bookRoute = require("./routes/books")
 const parametersRoute = require("./routes/parameters")
 const commandsRoute = require("./routes/commands");
+const htmlGenerator = require("./followComands")
 
 const bodyParser = require('body-parser')
 
@@ -46,5 +47,20 @@ app.use("/user", userRoute);
 app.use("/book", bookRoute)
 app.use("/utils", parametersRoute);
 app.use("/", commandsRoute)
+
+app.use("/get-test", (req, res)=>{
+    console.log(req)
+   res.status(200).json(req.body);
+})
+
+app.get("/follow-command", async (req, res)=>{ 
+    console.log(req.rawHeaders[1])
+    let myCommand = await htmlGenerator.myHtmlVar(req.query.command)
+    if(req.query.command){
+        return res.send(myCommand);
+    }
+    return res.send("Cant found command ID");
+    
+})
 
 module.exports = app;
