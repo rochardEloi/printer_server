@@ -39,9 +39,7 @@ exports.getparameter = (req, res)=>{
 }
 
 exports.getoneparameter = (req, res)=>{
-   
-
-    Parameters.findOne({_id : req.params.id})
+    Parameters.findOne({name : req.params.name})
     .then(parameters => res.status("201").json(parameters))
     .catch(err => res.status("401").json(err))
 

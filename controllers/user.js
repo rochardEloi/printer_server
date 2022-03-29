@@ -1,7 +1,8 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
+const { resetWatchers } = require('nodemon/lib/monitor/watch');
 dotenv.config()
 
 exports.signupCustomer = (req, res, next) => {   
@@ -62,7 +63,7 @@ exports.signupAdmin = (req, res, next) => {
 
 
 
-exports.login = (req, res, next) => {
+exports.login =  (req, res, next) => {
     console.log(req.body)
     User.findOne({ email: req.body.email })
         .then(
@@ -109,4 +110,41 @@ exports.getUsers = (req, res)=>{
     User.updateOne({ _id: req.params.id }, {...req.body, _id: req.params.id })
         .then(() => res.status('201').json({ message: "Succesfully updated" }))
         .catch(error => res.status('401').json(error))
+}
+
+exports.updateUserPassword = (req,res)=>{
+    User.findOne({_id : req.params.id})
+        .then( (user)=> {
+            bcrypt.compare(req.body.oldPassword, user.password)
+                .then(async(valid)=>{
+                       if(!valid){
+                          return res.status(200).json({status : "fail", message : "Old password Incorrect"})
+                        }
+
+                        if(req.body.newPassword !== req.body.confirmPassword){
+                            return res.status(200).json({status : "fail", message : "Password don't match"})
+                        }
+                        
+                        let hashPassword
+                        try {
+                            hashPassword = await bcrypt.hash(req.body.newPassword, 10);
+                        } catch (error) {
+                            return res.status(200).json({status : "fail", message : "Hash error"})
+                        }
+                        
+                        User.updateOne({_id : req.params.id}, {password : hashPassword})
+                        .then(()=>{
+                            return res.status(200).json({status : "success", message : "success"})
+                        })
+                        .catch(()=>{
+                            return res.status(401).json({status : "fail", message : "Error with mail"})
+                        })
+                        
+                        
+
+                        
+                    
+                })
+        })
+        .catch(err => res.status("401").json(err))
 }
