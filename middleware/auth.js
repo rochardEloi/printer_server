@@ -18,8 +18,6 @@ module.exports = (userType) =>{
                     }
                     else{
                         const role = decodedToken.role
-                        console.log(userId);
-                        console.log(decodedToken);
                         if (userType != "both" && role != userType) {
                             res.status(401).json({ message: "Invalid User" });
                         } else {
